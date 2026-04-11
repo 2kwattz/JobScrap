@@ -3,52 +3,56 @@ const app = express(); // Express Instance
 
 const dotenv = require('dotenv').config();
 const axios = require('axios')
-const cheerio = require('cheerio');
 const compression = require('compression')
 const errorMiddleware = require('./middleware/errorMiddleware')
 const path = require('path');
 const helmet = require('helmet');
 const connectDB = require('./db/conn')
-
-const bodyParser = require('body-parser');  // For getting Web Form Data
 const fs = require('fs'); // For managing files
 
+// BCrypt Hashing Algorithm for Security
+const bcrypt = require('bcryptjs');
 // Multer for storing Profile Picture (User's DP)
 const multer = require('multer');
+const mongoSanitize = require('express-mongo-sanitize'); // Mongodb Input Sanitize
 
-const rateLimit = require("express-rate-limit"); // API Rate Limiter
-
-// Connect Database
-connectDB()
-
-// Middlewares
-
-// Compression Middleware for speed optimization
-
-app.use(compression())
-
-// BCrypt Hashing Algorithm for Security
-
-const bcrypt = require('bcryptjs');
+// Nodemailer for verification mail
+const nodemailer = require('nodemailer');
 
 // JWT Tokens for authentication and verifying users identity
 const jwt = require('jsonwebtoken'); // Importing JWT Library
 
-
-// Cookie Parser for JWT Token Authentication
-
-const cookieParser = require("cookie-parser"); // For JWT Verification
-app.use(cookieParser()); // Initializing CookieParser Middleware
-
-// Nodemailer for verification mail
-
-const nodemailer = require('nodemailer');
+// Connect Database
+connectDB()
 
 const port = process.env.PORT || 80; // Server Port Number
 
-app.use(bodyParser.urlencoded({ extended: false })); //Middlewares for parsing the request body
-app.use(bodyParser.json());
+// Cookie Parser for JWT Token Authentication
+const cookieParser = require("cookie-parser"); // For JWT Verification
+
+// SQL Injection Middleware (Ik we dont have sql, just to confuse the enemy)
+const sqlInjectionMiddleware = require("./middleware/sqlInjectionMiddleware")
+
+// Middlewares
+
+app.use(cookieParser()); // Initializing CookieParser Middleware
+app.use(compression()) // Compression Middleware for speed optimization
+
+// Body parsing
 app.use(helmet()); //Security Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(sqlInjectionMiddleware)
+
+// Sanitizes Mongodb data input by removing malicious special symbols
+// app.use(
+//   mongoSanitize({
+//     replaceWith: '_',
+//     onSanitize: ({ req, key }) => {
+//       console.warn("Sanitized:", key);
+//     }
+//   })
+// );
 
 //  Creating a new router
 
