@@ -23,13 +23,13 @@ function AuthCard({
 
         <form className="contact-card auth-form">
           {fields.map((field) => (
-            <label key={field.label}>
+            <label key={field.label} className="auth-field">
               {field.label}
-              {field.type === "textarea" ? (
-                <textarea rows="5" placeholder={field.placeholder} />
-              ) : (
-                <input type={field.type} placeholder={field.placeholder} />
-              )}
+              <input
+                type={field.type}
+                name={field.name}
+                placeholder={field.placeholder}
+              />
             </label>
           ))}
 
@@ -43,6 +43,7 @@ function AuthCard({
                 {secondaryLinkLabel}
               </Link>
             ) : null}
+
             <p>
               {footerText}{" "}
               <Link to={footerLinkTo} className="text-link">

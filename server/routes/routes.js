@@ -3,19 +3,22 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const authMiddleware = require("../middleware/authMiddleware")
+const scrapJobs = require('../utility/scrapper');
 
 // User Model
 const userModel = require('../models/user')
 
 // Rate Limiting
 
-const { generalApiLimiter, authApiLimiter } = require('../middleware/rateLimiterMiddleware')
+const { generalApiLimiter, authApiLimiter } = require('../middleware/rateLimiterMiddleware');
 
 router.use(generalApiLimiter);
 
 // Index Route
 router.get("/", async function (req, res) {
   res.send("Hello World")
+
+  scrapJobs('Linkedin','Python Developer')
 })
 
 router.get("/dashboard",authMiddleware, async function(req,res){

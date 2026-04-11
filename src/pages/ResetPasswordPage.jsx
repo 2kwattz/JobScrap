@@ -3,6 +3,7 @@ import AuthCard from "../components/AuthCard";
 const resetFields = [
   {
     label: "Email Address",
+    name: "emailAddress",
     type: "email",
     placeholder: "Enter the email linked to your account",
   },

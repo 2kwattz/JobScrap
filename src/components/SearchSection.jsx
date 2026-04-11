@@ -1,6 +1,8 @@
 import { useState } from "react";
+import JobCard from "./JobCard.jsx";
 
 function SearchSection({ title, subtitle, placeholder, items }) {
+  const [draftQuery, setDraftQuery] = useState("");
   const [query, setQuery] = useState("");
 
   const filteredItems = items.filter((item) => {
@@ -25,31 +27,36 @@ function SearchSection({ title, subtitle, placeholder, items }) {
         <p>{subtitle}</p>
       </div>
 
-      <div className="search-toolbar">
+      <form
+        className="search-toolbar search-toolbar-form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          setQuery(draftQuery);
+        }}
+      >
         <input
           type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          value={draftQuery}
+          onChange={(event) => setDraftQuery(event.target.value)}
           className="search-input"
           placeholder={placeholder}
           aria-label={placeholder}
         />
-      </div>
+        <button type="submit" className="primary-btn search-btn">
+          Search
+        </button>
+      </form>
 
       <div className="card-grid">
         {filteredItems.map((item) => (
-          <article className="listing-card" key={`${item.title}-${item.company}`}>
-            <div className="listing-meta">
-              <span>{item.company}</span>
-              <span>{item.location}</span>
-            </div>
-            <h3>{item.title}</h3>
-            <p className="salary-chip">{item.salary}</p>
-            <p className="listing-description">{item.description}</p>
-            <button type="button" className="primary-btn">
-              Apply Now
-            </button>
-          </article>
+          <JobCard
+            key={`${item.title}-${item.company}`}
+            title={item.title}
+            company={item.company}
+            location={item.location}
+            salary={item.salary}
+            description={item.description}
+          />
         ))}
       </div>
 
