@@ -14,8 +14,9 @@ const bodyParser = require('body-parser');  // For getting Web Form Data
 const fs = require('fs'); // For managing files
 
 // Multer for storing Profile Picture (User's DP)
-
 const multer = require('multer');
+
+const rateLimit = require("express-rate-limit"); // API Rate Limiter
 
 // Connect Database
 connectDB()

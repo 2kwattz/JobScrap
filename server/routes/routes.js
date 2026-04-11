@@ -4,20 +4,27 @@ const router = express.Router();
 // User Model
 const userModel = require('../models/user')
 
+// Rate Limiting
+
+const { generalApiLimiter, authApiLimiter } = require('../middleware/rateLimiterMiddleware')
+
+router.use(generalApiLimiter);
+
 router.get("/", async function (req, res) {
   res.send("Hello World")
 })
 
-router.post("/register", async function (req, res) {
+router.post("/register", authApiLimiter, async function (req, res) {
   try {
     const { firstName, lastName, emailAddress, password, confirmPassword, securityQuestionAnswer } = req.body;
+
+    // Validating User Input
 
     if(!emailAddress || !firstName || !lastName || !emailAddress || !password || !confirmPassword || !securityQuestionAnswer){
 
       return res.status(400).json({
         success: false,
         message:"Required fields missing"
-
       })
     }
 
