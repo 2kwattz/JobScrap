@@ -1,5 +1,9 @@
 const express = require('express'); //NodeJs Express Framework
 const app = express(); // Express Instance
+const http = require('http'); // REQUIRED for Socket.IO
+const { Server } = require('socket.io');
+const server = http.createServer(app);
+
 
 require('dotenv').config();
 const axios = require('axios')
@@ -29,6 +33,12 @@ const port = process.env.PORT || 80; // Server Port Number
 
 // Cookie Parser for JWT Token Authentication
 const cookieParser = require("cookie-parser"); // For JWT Verification
+
+const io = new Server(server, {
+  cors: {
+    origin: "*"
+  }
+});
 
 // SQL Injection Middleware (Ik we dont have sql, just to confuse the enemy)
 const sqlInjectionMiddleware = require("./middleware/sqlInjectionMiddleware")
@@ -73,6 +83,17 @@ const router = require('./routes/routes');
 
 // Mount all routes
 app.use('/api', router);
+
+// Socket Connection
+
+io.on('connection', (socket) => {
+  console.log('User connected:', socket.id);
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
+});
+
 app.use(errorMiddleware)
 
 app.listen(port, function () {

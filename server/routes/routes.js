@@ -18,7 +18,7 @@ router.use(generalApiLimiter);
 router.get("/", async function (req, res) {
   res.send("Hello World")
 
-  scrapJobs('Internshala','Python Developer')
+  scrapJobs('JobRapido','Python Developer','Vadodara')
 })
 
 router.get("/dashboard",authMiddleware, async function(req,res){
@@ -141,6 +141,43 @@ router.post("/login", authApiLimiter, async function (req, res) {
   catch (error) {
     console.log("Error in login ", error)
   }
+})
+
+router.get("/jobs", async function(req,res) {
+
+  try{
+    // const jobKeyword = req.body.jobKeyword;
+    // const jobLocation = req.body.jobLocation;
+
+     const jobKeyword = "python";
+    const jobLocation = "vadodara";
+    const scrapperResponse = {}
+  
+    const jobPlatforms = ["Jooble","Internshala","JobRapido"];
+  
+    for(let platform of jobPlatforms){
+      const response = await scrapJobs(platform,jobKeyword,jobLocation)
+      scrapperResponse[platform] = response;
+    }
+
+    console.log("SCRAPPER RESP",scrapperResponse)
+  
+     res.status(200).json({
+      success: true,
+      message: "Jobs fetched successfully",
+      data: scrapperResponse
+    });
+
+  }
+  catch(error){
+    console.log("Error In Scrapping Jobs ",error)
+    res.status(500).json({
+      success:false,
+      message:"Internal Server Error"
+    })
+  }
+
+
 })
 
 
