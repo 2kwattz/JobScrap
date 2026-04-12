@@ -1,7 +1,7 @@
 const express = require('express'); //NodeJs Express Framework
 const app = express(); // Express Instance
 
-const dotenv = require('dotenv').config();
+require('dotenv').config();
 const axios = require('axios')
 const compression = require('compression')
 const errorMiddleware = require('./middleware/errorMiddleware')

@@ -18,7 +18,7 @@ router.use(generalApiLimiter);
 router.get("/", async function (req, res) {
   res.send("Hello World")
 
-  scrapJobs('Linkedin','Python Developer')
+  scrapJobs('Internshala','Python Developer')
 })
 
 router.get("/dashboard",authMiddleware, async function(req,res){
