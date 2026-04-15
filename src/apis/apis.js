@@ -28,6 +28,10 @@ export const registerUser = async (userData) => {
     }
 };
 
+// Create Chatroom
+
+
+
 // Get all users
 export const getUsers = async () => {
     try {
