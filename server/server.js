@@ -96,7 +96,7 @@ app.use('/api', router);
 
 app.use(errorMiddleware)
 
-app.listen(port, function () {
+app.listen(port, function() {
     console.log(`The server has started. Listening on port ${port}`);
 })
 
